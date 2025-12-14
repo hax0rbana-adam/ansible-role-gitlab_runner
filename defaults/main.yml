@@ -23,7 +23,7 @@ gitlab_runner_run_untagged: "--run-untagged"
 gitlab_runner_git_http_proxy: git config --global http.proxy {{ gitlab_runner_docker_env_vars["HTTP_PROXY"] }}
 gitlab_runner_git_https_proxy: git config --global https.proxy {{ gitlab_runner_docker_env_vars["HTTPS_PROXY"]
 gitlab_runner_docker_extra_args: >
-  --pre-clone-script '{{ gitlab_runner_git_http_proxy }}; {{ gitlab_runner_git_https_proxy }}'
+  --pre-clone-script "{{ gitlab_runner_git_http_proxy }}; {{ gitlab_runner_git_https_proxy }}"
   --env "https_proxy={{ gitlab_runner_docker_env_vars["https_proxy"] }}"
   --env "http_proxy={{ gitlab_runner_docker_env_vars["http_proxy"] }}"
   --env "HTTPS_PROXY={{ gitlab_runner_docker_env_vars["HTTPS_PROXY"] }}"
