@@ -75,13 +75,13 @@
   ansible.builtin.command:
     cmd: >
       gitlab-runner register --docker-image {{ gitlab_runner_docker_image }}
-      --run-untagged --locked=false {{ gitlab_runner_docker_extra_args }}
+      {{ gitlab_runner_run_untagged }} --locked=false {{ gitlab_runner_docker_extra_args }}
   environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_docker_env_vars) }}"
   changed_when: true
 
 - name: Registering our runner with the gitlab server using a shell
   when: gitlab_runner_name not in gr_list.stdout
   ansible.builtin.command:
-    cmd: gitlab-runner register --run-untagged --locked=false
+    cmd: gitlab-runner register {{ gitlab_runner_run_untagged }} --locked=false
   environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_shell_env_vars) }}"
   changed_when: true
