@@ -5,7 +5,7 @@ gitlab_runner_user: gitlab-runner
 
 gitlab_runner_name: "{{ ansible_domain }}-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
 gitlab_runner_tags: "{{ ansible_distribution | lower }},{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
-gitlab_runner_docker_image: "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+gitlab_runner_docker_image: "{{ ansible_distribution | lower }}:{{ ansible_distribution_release }}"
 gitlab_runner_docker_env_vars:
   HTTP_PROXY: proxy.{{ ansible_domain }}:3128
   HTTPS_PROXY: proxy.{{ ansible_domain }}:3128
