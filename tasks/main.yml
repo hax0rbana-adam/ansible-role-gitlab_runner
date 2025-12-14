@@ -1,0 +1,87 @@
+- name: Install software that is required for GitLab Runner
+  ansible.builtin.package:
+    name:
+      - llvm
+      - clang
+      - libtool-bin
+      - build-essential
+      - cmake
+      - automake
+      - bison
+      - flex
+      - libglib2.0-dev
+      - libc6-dev-i386
+      - libpixman-1-dev
+      - git
+      - curl
+      - wget
+
+- name: Download key for GitLab's apt repo
+  ansible.builtin.get_url:
+    url: "{{ gitlab_runner_key_url }}"
+    checksum: "{{ gitlab_runner_checksum }}"
+    dest: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    mode: '644'
+
+- name: Pinning GitLab's apt repo to be the preferred one for the gitlab-runner package
+  ansible.builtin.template:
+    src: templates/pin-gitlab-runner.pref.j2
+    dest: /etc/apt/preferences.d/pin-gitlab-runner.pref
+    owner: root
+    mode: "644"
+
+- name: Adding apt repo for GitLab runner
+  ansible.builtin.template:
+    src: templates/gitlab-runner.list.j2
+    dest: /etc/apt/sources.list.d/gitlab-runner.list
+    owner: root
+    mode: "644"
+  notify: Apt update
+
+- name: Install software that is required for GitLab Runner
+  ansible.builtin.package:
+    name: ["gitlab-runner", "docker.io"]
+
+- name: Getting the path of the gitlab runner's home directory
+  ansible.builtin.debug:
+    gr_home: ansible_env.HOME
+  become: true
+  become_user: "{{ gitlab_runner_user }}"
+
+# There is a default .bash_logout in the gitlab runner's home directory that clears
+# the screen, causing all CI jobs to fail.  Removing it fixes that.
+# https://docs.gitlab.com/runner/shells/index.html#shell-profile-loading
+- name: Remove the .bash_logout file which causes all CI jobs to fail
+  ansible.builtin.file:
+    path: "{{ gr_home }}/.bash_logout"
+    state: absent
+    owner: "{{ gitlab_runner_user }}"
+
+- name: Setting proxy settings for docker
+  when: gitlab_runner_docker_env_vars is defined
+  ansible.builtin.lineinfile:
+    line: "{{ item.key }}={{ item.value }}"
+    dest: /etc/default/docker
+  loop: "{{ lookup('dict', gitlab_runner_docker_env_vars) }}"
+
+- name: Checking to see if our runner is already registered
+  ansible.builtin.command:
+    cmd: gitlab-runner list
+  register: gr_list
+  changed_when: false
+
+- name: Registering our runner with the gitlab server using docker
+  when: gitlab_runner_name not in gr_list.stdout
+  ansible.builtin.command:
+    cmd: >
+      gitlab-runner register --docker-image {{ gitlab_runner_docker_image }}
+      --run-untagged --locked=false {{ gitlab_runner_docker_extra_args }}
+  environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_docker_env_vars) }}"
+  changed_when: true
+
+- name: Registering our runner with the gitlab server using a shell
+  when: gitlab_runner_name not in gr_list.stdout
+  ansible.builtin.command:
+    cmd: gitlab-runner register --run-untagged --locked=false
+  environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_shell_env_vars) }}"
+  changed_when: true

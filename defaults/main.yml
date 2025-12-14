@@ -1,0 +1,39 @@
+gitlab_runner_key_url: https://packages.gitlab.com/gpg.key
+gitlab_runner_checksum: sha256:d283e2839ad711988ea57307d88cced142dfc67f27cc50ec3158a3978ad66bb5
+gitlab_runner_user: gitlab-runner
+
+
+gitlab_runner_name: "{{ ansible_domain }}-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+gitlab_runner_tags: "{{ ansible_distribution | lower }},{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+gitlab_runner_docker_image: "{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+gitlab_runner_docker_env_vars:
+  HTTP_PROXY: proxy.{{ ansible_domain }}:3128
+  HTTPS_PROXY: proxy.{{ ansible_domain }}:3128
+  https_proxy: http://proxy.$domain:3128
+  http_proxy: http://proxy.$domain:3128
+  RUNNER_TAG_LIST: "{{ gitlab_runner_tags }},docker"
+  RUNNER_EXECUTOR: docker
+gitlab_runner_shell_env_vars:
+  RUNNER_TAG_LIST: "{{ gitlab_runner_tags }},shell"
+  RUNNER_EXECUTOR: shell
+
+gitlab_runner_docker_extra_args: >
+  --pre-clone-script 'git config --global http.proxy {{ gitlab_runner_docker_env_vars["HTTP_PROXY"] }};
+                      git config --global https.proxy {{ gitlab_runner_docker_env_vars["HTTPS_PROXY"] }}'
+  --env "https_proxy={{ gitlab_runner_docker_env_vars["https_proxy"] }}"
+  --env "http_proxy={{ gitlab_runner_docker_env_vars["http_proxy"] }}"
+  --env "HTTPS_PROXY={{ gitlab_runner_docker_env_vars["HTTPS_PROXY"] }}"
+  --env "HTTP_PROXY={{ gitlab_runner_docker_env_vars["HTTP_PROXY"] }}"
+
+# You'll need to override the registration token and URL for your GitLab
+# instance. To get a token, see the instructions:
+# https://docs.gitlab.com/ci/runners/runners_scope/
+gitlab_runner_reg_token: ""
+gitlab_runner_ci_server_url: https://gitlab.{{ ansible_domain }}/
+
+gitlab_runner_reg_env_vars_default:
+  REGISTRATION_TOKEN: "{{ gitlab_runner_reg_token }}"
+  CI_SERVER_URL: "{{ gitlab_runner_ci_server_url }}"
+  REGISTER_NON_INTERACTIVE: true
+  CI_SERVER_TLS_CA_FILE:
+  RUNNER_NAME: "{{ gitlab_runner_name }}"

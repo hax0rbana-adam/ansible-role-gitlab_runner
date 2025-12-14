@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  author: Adam
+  description: GitLab Runner - A daemon to run CI/CD jobs
+  license: MIT
+  company: none
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+  galaxy_tags:
+    - ci
+    - cd
+    - cicd
+  namespace: hax0rbana_adam
+  role_name: gitlab_runner
+
+dependencies: []
