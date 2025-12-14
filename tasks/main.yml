@@ -20,7 +20,7 @@
   ansible.builtin.get_url:
     url: "{{ gitlab_runner_key_url }}"
     checksum: "{{ gitlab_runner_checksum }}"
-    dest: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    dest: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.asc
     mode: '644'
 
 - name: Pinning GitLab's apt repo to be the preferred one for the gitlab-runner package
