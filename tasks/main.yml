@@ -36,10 +36,10 @@
     dest: /etc/apt/sources.list.d/gitlab-runner.list
     owner: root
     mode: "644"
-  notify: Apt update
 
 - name: Install software that is required for GitLab Runner
-  ansible.builtin.package:
+  ansible.builtin.apt:
+    update_cache: true
     name: ["gitlab-runner", "docker.io"]
 
 - name: Getting the path of the gitlab runner's home directory
