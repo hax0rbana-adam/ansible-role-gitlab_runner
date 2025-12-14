@@ -18,7 +18,7 @@ gitlab_runner_shell_env_vars:
   RUNNER_EXECUTOR: shell
 # If you want this runner to run untagged jobs, leave this variable alone.
 # If you don't, change it to an empty string.
-gitlab_runner_run_untagged: "--run_untagged"
+gitlab_runner_run_untagged: "--run-untagged"
 
 gitlab_runner_docker_extra_args: >
   --pre-clone-script 'git config --global http.proxy {{ gitlab_runner_docker_env_vars["HTTP_PROXY"] }};
