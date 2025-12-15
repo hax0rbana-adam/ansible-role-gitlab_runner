@@ -1,3 +1,9 @@
+# You'll need to override the registration token and URL for your GitLab
+# instance. To get a token, see the instructions:
+# https://docs.gitlab.com/ci/runners/runners_scope/
+gitlab_runner_reg_token: ""
+gitlab_runner_ci_server_url: https://gitlab.{{ ansible_domain }}/
+
 gitlab_runner_key_url: https://packages.gitlab.com/gpg.key
 gitlab_runner_checksum: sha256:d283e2839ad711988ea57307d88cced142dfc67f27cc50ec3158a3978ad66bb5
 gitlab_runner_user: gitlab-runner
@@ -5,7 +11,6 @@ gitlab_runner_user: gitlab-runner
 
 gitlab_runner_name: "{{ ansible_domain }}-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
 gitlab_runner_tags: "{{ ansible_distribution | lower }},{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
-gitlab_runner_docker_image: "{{ ansible_distribution | lower }}:{{ ansible_distribution_release }}"
 
 # If you want your CI runner to run everything in a shell, your env vars should
 # look something like this:
@@ -37,18 +42,15 @@ gitlab_runner_env_vars:
 # If you don't, change it to an empty string.
 gitlab_runner_run_untagged: "--run-untagged"
 
-gitlab_runner_docker_extra_args: >
-  --docker-image {{ gitlab_runner_docker_image }}
-  --pre-get-sources-script "git config --global http.proxy $HTTP_PROXY; git config --global https.proxy $HTTPS_PROXY"
-  --env "https_proxy={{ gitlab_runner_env_vars["https_proxy"] }}"
-  --env "http_proxy={{ gitlab_runner_env_vars["http_proxy"] }}"
-  --env "HTTPS_PROXY={{ gitlab_runner_env_vars["HTTPS_PROXY"] }}"
-  --env "HTTP_PROXY={{ gitlab_runner_env_vars["HTTP_PROXY"] }}"
-
-# You'll need to override the registration token and URL for your GitLab
-# instance. To get a token, see the instructions:
-# https://docs.gitlab.com/ci/runners/runners_scope/
-gitlab_runner_reg_token: ""
-gitlab_runner_ci_server_url: https://gitlab.{{ ansible_domain }}/
-
-gitlab_runner_reg_env_vars:
+# Enable passing additional arguments to the registration command. Default is
+# to not specify anything special, example below is for specifying extra args
+# for docker.
+gitlab_runner_extra_args: ""
+# gitlab_runner_docker_image: "{{ ansible_distribution | lower }}:{{ ansible_distribution_release }}"
+# gitlab_runner_extra_args: >
+#   --docker-image {{ gitlab_runner_docker_image }}
+#   --pre-get-sources-script "git config --global http.proxy $HTTP_PROXY; git config --global https.proxy $HTTPS_PROXY"
+#   --env "https_proxy={{ gitlab_runner_env_vars["https_proxy"] }}"
+#   --env "http_proxy={{ gitlab_runner_env_vars["http_proxy"] }}"
+#   --env "HTTPS_PROXY={{ gitlab_runner_env_vars["HTTPS_PROXY"] }}"
+#   --env "HTTP_PROXY={{ gitlab_runner_env_vars["HTTP_PROXY"] }}"
