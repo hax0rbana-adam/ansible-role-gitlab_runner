@@ -13,9 +13,11 @@ gitlab_runner_docker_env_vars:
   http_proxy: http://proxy.{{ ansible_domain }}:3128
   RUNNER_TAG_LIST: "{{ gitlab_runner_tags }},docker"
   RUNNER_EXECUTOR: docker
+  RUNNER_NAME: "{{ gitlab_runner_name }}-docker"
 gitlab_runner_shell_env_vars:
   RUNNER_TAG_LIST: "{{ gitlab_runner_tags }},shell"
   RUNNER_EXECUTOR: shell
+  RUNNER_NAME: "{{ gitlab_runner_name }}-shell"
 # If you want this runner to run untagged jobs, leave this variable alone.
 # If you don't, change it to an empty string.
 gitlab_runner_run_untagged: "--run-untagged"
@@ -38,4 +40,3 @@ gitlab_runner_reg_env_vars:
   CI_SERVER_URL: "{{ gitlab_runner_ci_server_url }}"
   REGISTER_NON_INTERACTIVE: true
   CI_SERVER_TLS_CA_FILE:
-  RUNNER_NAME: "{{ gitlab_runner_name }}"
