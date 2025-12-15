@@ -70,18 +70,9 @@
   register: gr_list
   changed_when: false
 
-- name: Registering our runner with the gitlab server using docker
+- name: Registering our runner with the gitlab server
   when: gitlab_runner_reg_token not in gr_list.stderr
   ansible.builtin.command:
-    cmd: >
-      gitlab-runner register --docker-image {{ gitlab_runner_docker_image }}
-      {{ gitlab_runner_run_untagged }} --locked=false {{ gitlab_runner_docker_extra_args }}
-  environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_docker_env_vars) }}"
-  changed_when: true
-
-- name: Registering our runner with the gitlab server using a shell
-  when: gitlab_runner_reg_token not in gr_list.stderr
-  ansible.builtin.command:
-    cmd: gitlab-runner register {{ gitlab_runner_run_untagged }} --locked=false
-  environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_shell_env_vars) }}"
+    cmd: gitlab-runner register {{ gitlab_runner_run_untagged }} --locked=false {{ gitlab_runner_docker_extra_args }}
+  environment: "{{ gitlab_runner_reg_env_vars | combine(gitlab_runner_env_vars) }}"
   changed_when: true
