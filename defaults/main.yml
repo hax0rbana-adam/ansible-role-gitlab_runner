@@ -40,10 +40,10 @@ gitlab_runner_run_untagged: "--run-untagged"
 gitlab_runner_docker_extra_args: >
   --docker-image {{ gitlab_runner_docker_image }}
   --pre-get-sources-script "git config --global http.proxy $HTTP_PROXY; git config --global https.proxy $HTTPS_PROXY"
-  --env "https_proxy={{ gitlab_runner_docker_env_vars["https_proxy"] }}"
-  --env "http_proxy={{ gitlab_runner_docker_env_vars["http_proxy"] }}"
-  --env "HTTPS_PROXY={{ gitlab_runner_docker_env_vars["HTTPS_PROXY"] }}"
-  --env "HTTP_PROXY={{ gitlab_runner_docker_env_vars["HTTP_PROXY"] }}"
+  --env "https_proxy={{ gitlab_runner_env_vars["https_proxy"] }}"
+  --env "http_proxy={{ gitlab_runner_env_vars["http_proxy"] }}"
+  --env "HTTPS_PROXY={{ gitlab_runner_env_vars["HTTPS_PROXY"] }}"
+  --env "HTTP_PROXY={{ gitlab_runner_env_vars["HTTP_PROXY"] }}"
 
 # You'll need to override the registration token and URL for your GitLab
 # instance. To get a token, see the instructions:
