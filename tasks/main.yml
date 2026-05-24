@@ -80,3 +80,10 @@
     cmd: gitlab-runner register {{ gitlab_runner_run_untagged }} --locked=false {{ gitlab_runner_extra_args }}
   environment: "{{ gitlab_runner_env_vars }}"
   changed_when: true
+
+- name: Ensure the docker cache is disabled to avoid stale cache problems
+  ansible.builtin.lineinfile:
+    path: /etc/gitlab-runner/config.toml
+    regexp: '^(\s*disable_cache\s*=).*$'
+    insertafter: '^\s*\[runners\.docker\]$'
+    line: "    disable_cache = true"
