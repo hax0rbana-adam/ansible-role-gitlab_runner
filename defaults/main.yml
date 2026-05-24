@@ -5,7 +5,7 @@ gitlab_runner_reg_token: ""
 gitlab_runner_ci_server_url: https://gitlab.{{ ansible_domain }}/
 
 gitlab_runner_key_url: https://packages.gitlab.com/gpg.key
-gitlab_runner_checksum: sha256:d283e2839ad711988ea57307d88cced142dfc67f27cc50ec3158a3978ad66bb5
+gitlab_runner_checksum: sha256:003c0ca2fea61767f8c6de7a1c0f49fc88ea3c8db95e3cd1856b32ce9d876e0f
 gitlab_runner_user: gitlab-runner
 
 

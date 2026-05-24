@@ -23,6 +23,10 @@
     dest: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.asc
     mode: '644'
 
+- name: Dearmor gpg key
+  ansible.builtin.shell:
+    cmd: umask 022; gpg --dearmor < /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.asc > /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+
 - name: Pinning GitLab's apt repo to be the preferred one for the gitlab-runner package
   ansible.builtin.template:
     src: templates/pin-gitlab-runner.pref.j2
