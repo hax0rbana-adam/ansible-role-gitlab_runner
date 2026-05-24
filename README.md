@@ -11,6 +11,40 @@ It does not require you have SSH running.
   become: true
   roles:
     - role: hax0rbana_adam.gitlab_runner
+      gitlab_runner_reg_token: "YOUR_REG_TOKEN_GOES_HERE"
+```
+
+Here's an example of using docker to run CI jobs and having the docker
+containers use a proxy when it checks out the source code.
+
+```yaml
+- hosts: all
+  become: true
+  remote_user: root
+  roles:
+    - role: hax0rbana_adam.gitlab_runner
+      gitlab_runner_reg_token: "YOUR_REG_TOKEN_GOES_HERE"
+      gitlab_runner_name: "{{ ansible_domain }}-{{ ansible_distribution | lower }}-{{ ansible_distribution_major_version }}"
+      gitlab_runner_docker_image: "{{ ansible_distribution | lower }}:{{ ansible_distribution_release }}"
+      gitlab_runner_extra_args: >
+        --docker-image {{ gitlab_runner_docker_image }}
+        --pre-get-sources-script "git config --global http.proxy $HTTP_PROXY; git config --global https.proxy $HTTPS_PROXY"
+        --env "https_proxy={{ gitlab_runner_env_vars['https_proxy'] }}"
+        --env "http_proxy={{ gitlab_runner_env_vars['http_proxy'] }}"
+        --env "HTTPS_PROXY={{ gitlab_runner_env_vars['HTTPS_PROXY'] }}"
+        --env "HTTP_PROXY={{ gitlab_runner_env_vars['HTTP_PROXY'] }}"
+      gitlab_runner_env_vars:
+        HTTP_PROXY: proxy.{{ ansible_domain }}:3128
+        HTTPS_PROXY: proxy.{{ ansible_domain }}:3128
+        https_proxy: http://proxy.{{ ansible_domain }}:3128
+        http_proxy: http://proxy.{{ ansible_domain }}:3128
+        RUNNER_TAG_LIST: "runner2,docker"
+        RUNNER_EXECUTOR: docker
+        RUNNER_NAME: "{{ gitlab_runner_name }}-docker"
+        REGISTRATION_TOKEN: "{{ gitlab_runner_reg_token_docker }}"
+        CI_SERVER_URL: "https://gitlab.{{ ansible_domain }}/"
+        REGISTER_NON_INTERACTIVE: true
+        CI_SERVER_TLS_CA_FILE:
 ```
 
 # Official repo location
