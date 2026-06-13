@@ -87,3 +87,9 @@
     regexp: '^(\s*disable_cache\s*=).*$'
     insertafter: '^\s*\[runners\.docker\]$'
     line: "    disable_cache = true"
+
+- name: Set the number of concurrent jobs for this runner
+  ansible.builtin.lineinfile:
+    path: /etc/gitlab-runner/config.toml
+    regexp: '^(\s*concurrent\s*=).*$'
+    line: "    concurrent = {{ gitlab_concurrent }}"

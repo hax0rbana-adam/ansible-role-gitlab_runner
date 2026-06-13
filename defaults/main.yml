@@ -38,6 +38,8 @@ gitlab_runner_env_vars:
 #   REGISTER_NON_INTERACTIVE: true
 #   CI_SERVER_TLS_CA_FILE:
 
+gitlab_concurrent: 3
+
 # If you want this runner to run untagged jobs, leave this variable alone.
 # If you don't, change it to an empty string.
 gitlab_runner_run_untagged: "--run-untagged"
