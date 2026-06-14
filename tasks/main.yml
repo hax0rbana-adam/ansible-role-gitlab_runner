@@ -92,4 +92,4 @@
   ansible.builtin.lineinfile:
     path: /etc/gitlab-runner/config.toml
     regexp: '^(\s*concurrent\s*=).*$'
-    line: "    concurrent = {{ gitlab_concurrent }}"
+    line: "concurrent = {{ gitlab_concurrent }}"
